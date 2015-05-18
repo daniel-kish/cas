@@ -1,0 +1,102 @@
+#ifndef ITER_H
+#define ITER_H
+
+#include "tree.h"
+#include <cstddef>
+#include <vector>
+
+template <class T>
+using VecNodeIterator = typename std::vector<typename Tree<T>::Node>::iterator;
+
+template <class T>
+struct Tree<T>::Iterator 
+{
+private:
+	Node* n;
+public:
+	Iterator() : n{ nullptr }
+	{	}
+	Iterator(Node* _n) : n{ _n }
+	{	}
+	friend Tree<T>;
+	// iterator concept
+	// copy semantics
+	Iterator(const Iterator&) = default;
+	Iterator& operator= (const Iterator&) = default;
+	// destruction
+	~Iterator() = default;
+	
+	T& operator*() const
+	{
+		return n->data;
+	}
+	
+	Iterator& operator++ ()
+	{	
+		++n;
+		return *this;
+	}
+	
+	
+	// InputIterator concept
+	bool operator== (Iterator i)
+	{
+		return n == i.n;
+	}
+	
+	bool operator!= (Iterator i)
+	{
+		return !(n == i.n);
+	}
+	
+	T* operator->() const
+	{
+		return &n->data;
+	}
+	
+	
+	// BidirectionalIterator concept
+	Iterator operator++ (int)
+	{	
+		Iterator tmp = *this;
+		n++;
+		return tmp;
+	}
+	Iterator& operator-- ()
+	{	
+		--n;
+		return *this;
+	}
+	
+	Iterator operator-- (int)
+	{	
+		Iterator tmp = *this;
+		n--;
+		return tmp;
+	}
+	
+	std::ptr_diff operator-(Iterator& rhs)
+	{
+		return std::ptr_diff{ n - rhs.n };
+	}
+	
+	Iterator operator+ (std::size_t a)
+	{
+		return Iterator{ n + a };
+	}
+	
+	// TreeIterator concept
+	void descend()
+	{
+		n = &n->leaves[0];
+	}
+	void ascend()
+	{
+		n = n->parent;
+	}
+};
+
+template <class Cont>
+using Iterator = typename Cont::Iterator;
+
+#endif // ITER_H

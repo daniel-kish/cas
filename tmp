@@ -1,0 +1,154 @@
+/*
+enum class EType { Sum, Sub, Mul, Div, Pow, Var, Lit, Nil };
+
+std::ostream& operator<< (std::ostream& s, const EType& t)
+{
+	switch (t)
+	{
+		case EType::Sum: s << "+"; break;
+		case EType::Sub: s << "-"; break;
+		case EType::Mul: s << "*"; break;
+		case EType::Div: s << "/"; break;
+		case EType::Pow: s << "^"; break;
+		case EType::Var: break;
+		case EType::Lit: break;
+		case EType::Nil: s << "{}"; break;
+	}
+	return s;
+}
+
+struct entry { 
+	EType type; int id;
+	
+	entry(EType t, int i) : type{ t }, id{ i }
+	{	}
+	entry() : type{ EType::Nil }, id{ -1 }
+	{	}
+	friend std::ostream& operator<< (std::ostream& s, const entry& e)
+	{
+		s << e.type << ' ' << e.id;
+		return s;		
+	}
+};
+
+struct Variable
+{
+	Variable(string n, double v) : name{ n }, val{ v }, isSet{true}
+	{	}	
+	Variable(string n) : name{ n }, val {0.0}, isSet{false}
+	{	}
+	
+	string name;
+	
+	void set(double x) {	val = x; isSet = true;	}
+	void unset() {	isSet = true;	}
+	EType type() const { return EType::Var; }
+	
+	friend std::ostream& operator<< (std::ostream& s, const Variable& v)
+	{
+		if (v.isSet)
+			s << v.val;
+		else 
+			s << v.name;
+		return s;
+	}
+	
+private:
+	double val;
+	bool isSet;
+	
+};
+
+struct Literal
+{
+	const double val;
+	
+	Literal(const double x) : val{ x }
+	{	}
+	
+	EType type() const { return EType::Lit; }
+	
+	friend std::ostream& operator<< (std::ostream& s, const Literal& l)
+	{
+		s << l.val;
+		return s;
+	}
+};
+
+struct Expr
+{
+	vector<Variable> var_tbl;
+	vector<Literal> lit_tbl;
+	Tree<entry> tree;
+	
+	template <class Lhs, class Rhs>
+	void make_sum(Lhs lhs, Rhs rhs)
+	{
+		auto rt = tree.root();
+		*rt = { EType::Sum, -1 };
+		
+		rt->leaves = { entry(type_of(lhs), check_in(lhs)),
+					   entry(type_of(rhs), check_in(rhs)) 
+					 };
+	}
+	
+	EType type_of(Variable& v)
+	{	return EType::Var;	}
+	
+	EType type_of(Literal& v)
+	{	return EType::Lit;	}
+	
+	int check_in(Variable& v)
+	{
+		var_tbl.push_back( v );
+		return var_tbl.size()-1; // return index of the last
+	}
+	
+	int check_in(Literal& l)
+	{
+		lit_tbl.push_back( l );
+		return lit_tbl.size()-1; // return index of the last
+	}
+	
+	void print_iter(std::ostream& s, Tree<entry>::Iterator p)
+	{
+	
+		s << (*p).type << ' ' << (*p).id;
+		p.descend();
+		
+		
+				
+		while ( p != Tree<entry>::Iterator{} )
+		{
+			print_iter(s,p++);
+			s << ' ';
+		}
+		return;
+		print_iter(s,p);
+		switch ((*p).type)
+		{
+			case EType::Sum: s << "+"; break;
+			case EType::Sub: s << "-"; break;
+			case EType::Mul: s << "*"; break;
+			case EType::Div: s << "/"; break;
+			case EType::Pow: s << "^"; break;
+			case EType::Var: s << var_tbl[(*p).id]; break;
+			case EType::Lit: s << lit_tbl[(*p).id]; break;
+			case EType::Nil: s << "{}"; break;
+			default: return;
+		}
+		p.descend();
+		while ( p != Tree<entry>::Iterator{} )
+		{
+			print_iter(s,p++);
+			s << ' ';
+		}
+	}
+	
+	void print_tree(std::ostream& s)
+	{
+		auto p = tree.root();
+		print_iter(s,p);
+	}
+};
+*/
